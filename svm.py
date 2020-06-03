@@ -7,12 +7,12 @@ Train a SVM to categorize 28x28 pixel images into digits (MNIST dataset).
 import numpy as np
 from sklearn.datasets import load_digits
 from sklearn.utils import shuffle
-from sklearn.datasets import fetch_mldata
+from sklearn.datasets import fetch_openml
 from sklearn.utils import shuffle
 from sklearn.svm import SVC
 from sklearn import metrics
 from matplotlib.pyplot import show, imshow, cm
-from sklearn.cross_validation import train_test_split
+from sklearn.model_selection import train_test_split
 
 
 def main():
@@ -52,8 +52,8 @@ def analyze(clf, data):
 
     # Print example
     try_id = 1
-    out = clf.predict(data["test"]["X"][try_id])  # clf.predict_proba
-    print("out: %s" % out)
+    #out = clf.predict(data["test"]["X"][try_id])  # clf.predict_proba
+    #print("out: %s" % out)
     size = int(len(data["test"]["X"][try_id]) ** (0.5))
     view_image(
         data["test"]["X"][try_id].reshape((size, size)), data["test"]["y"][try_id]
@@ -87,7 +87,7 @@ def get_data():
     """
 
 
-    mnist = fetch_mldata("MNIST original")
+    mnist = fetch_openml("mnist_784")
 
     x = mnist.data
     y = mnist.target
