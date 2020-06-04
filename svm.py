@@ -16,16 +16,15 @@ from sklearn.model_selection import train_test_split
 
 
 def main():
-    """Orchestrate the retrival of data, training and testing."""
+    print("GETTING DATA...")
     data = get_data()
+    
+    clf = SVC(probability=False, kernel="rbf", C=2.8, gamma=0.0073)
+    #clf = SVC(probability=False, kernel="sigmoid", C=2.8, gamma=0.0073)
+    #clf = SVC(probability=False, kernel="linear", C=2.8, gamma=0.0073)
 
-    # Get classifier
-
-    clf = SVC(probability=False, kernel="rbf", C=2.8, gamma=0.0073)  # cache_size=200,
-
-    print("PROCESANDO DATOS. PORFAVOR ESPERE")
-
-    # take all of it - make that number lower for experiments
+    print("PROCESSING...")
+    
     examples = len(data["train"]["X"])
     clf.fit(data["train"]["X"][:examples], data["train"]["y"][:examples])
 
@@ -33,60 +32,21 @@ def main():
 
 
 def analyze(clf, data):
-    """
-    Analyze how well a classifier performs on data.
-
-    Parameters
-    ----------
-    clf : classifier object
-    data : dict
-    """
     # Get confusion matrix
 
-
     predicted = clf.predict(data["test"]["X"])
-    print(
-        "Confusion matrix:\n%s" % metrics.confusion_matrix(data["test"]["y"], predicted)
-    )
+    print("Confusion matrix:\n%s" % metrics.confusion_matrix(data["test"]["y"], predicted))
     print("Accuracy: %0.4f" % metrics.accuracy_score(data["test"]["y"], predicted))
+    print("Precision: %0.4f" % metrics.precision_score(data['test']['y'], predicted,average='weighted'))
+    print("Recall: %0.4f" % metrics.recall_score(data['test']['y'], predicted,average='weighted'))
+    print("F1: %0.4f" % metrics.f1_score(data['test']['y'], predicted,average='weighted'))
 
-    # Print example
-    try_id = 1
-    #out = clf.predict(data["test"]["X"][try_id])  # clf.predict_proba
-    #print("out: %s" % out)
-    size = int(len(data["test"]["X"][try_id]) ** (0.5))
-    view_image(
-        data["test"]["X"][try_id].reshape((size, size)), data["test"]["y"][try_id]
-    )
-
-
-def view_image(image, label=""):
-    """
-    View a single image.
-
-    Parameters
-    ----------
-    image : numpy array
-        Make sure this is of the shape you want.
-    label : str
-    """
-    
-
-    print("Label: %s" % label)
-    imshow(image, cmap=cm.gray)
-    show()
 
 
 def get_data():
-    """
-    Get data ready to learn with.
-
-    Returns
-    -------
-    dict
-    """
 
 
+    #trae datos esc
     mnist = fetch_openml("mnist_784")
 
     x = mnist.data
