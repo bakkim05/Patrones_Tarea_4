@@ -11,35 +11,61 @@ from sklearn.datasets import fetch_openml
 from sklearn.utils import shuffle
 from sklearn.svm import SVC
 from sklearn import metrics
-from matplotlib.pyplot import show, imshow, cm
 from sklearn.model_selection import train_test_split
+from joblib import dump, load
+import matplotlib.pyplot as plt
 
 
 def main():
     print("GETTING DATA...")
     data = get_data()
-    
-    clf = SVC(probability=False, kernel="rbf", C=2.8, gamma=0.0073)
-    #clf = SVC(probability=False, kernel="sigmoid", C=2.8, gamma=0.0073)
-    #clf = SVC(probability=False, kernel="linear", C=2.8, gamma=0.0073)
 
-    print("PROCESSING...")
+    
+    #clf = SVC(probability=False, kernel="rbf", C=1.8, gamma=0.001)
+    clf = SVC(probability=False, kernel="sigmoid", C=1.8, gamma=0.001)
+    #clf = SVC(probability=False, kernel="linear", C=1.8, gamma=0.001)
+
+    print("FITTING DATA...")
     
     examples = len(data["train"]["X"])
     clf.fit(data["train"]["X"][:examples], data["train"]["y"][:examples])
+    dump(clf, 'sigmoid-001-18.joblib')
+    #clf = load('rbf-073-28.joblib')
 
-    analyze(clf, data)
+
+    print("ANALYZING DATA...")
+    #analyze(clf, data)
 
 
 def analyze(clf, data):
     # Get confusion matrix
-
     predicted = clf.predict(data["test"]["X"])
-    print("Confusion matrix:\n%s" % metrics.confusion_matrix(data["test"]["y"], predicted))
-    print("Accuracy: %0.4f" % metrics.accuracy_score(data["test"]["y"], predicted))
-    print("Precision: %0.4f" % metrics.precision_score(data['test']['y'], predicted,average='weighted'))
-    print("Recall: %0.4f" % metrics.recall_score(data['test']['y'], predicted,average='weighted'))
-    print("F1: %0.4f" % metrics.f1_score(data['test']['y'], predicted,average='weighted'))
+    y_test = data["test"]["y"]
+    
+    print("Confusion matrix:\n%s" % metrics.confusion_matrix(y_test, predicted))
+    print("Accuracy: %0.4f" % metrics.accuracy_score(y_test, predicted))
+    print("Precision: %0.4f" % metrics.precision_score(y_test, predicted,average='weighted'))
+    print("Recall: %0.4f" % metrics.recall_score(y_test, predicted,average='weighted'))
+    print("F1: %0.4f" % metrics.f1_score(y_test, predicted,average='weighted'))
+
+    #Confusion Matrix
+    #cm = metrics.confusion_matrix(y_test, predicted)
+    #cm_display = metrics.ConfusionMatrixDisplay(cm).plot()
+
+    #ROC Curve
+    #fpr, tpr, _ = metrics.roc_curve(y_test, predicted, pos_label=clf.classes_[1])
+    #roc_display = metrics.RocCurveDisplay(fpr=fpr, tpr=tpr).plot()
+
+    #Precision Recall
+    #prec, recall, _ = metrics.precision_recall_curve(y_test, predicted, pos_label = clf.classes_[1])
+    #pr_display = metrics.PrecisionRecallDisplay(precision=prec, recall=recall).plot()
+
+
+
+    #fig, (ax1, ax2, ax3) = plt.subplots(1,3, figsize=(12,8))
+    #cm_display.plot(ax=ax1)
+    #roc_display.plot(ax=ax2)
+    #pr_display.plot(ax=ax3
 
 
 
@@ -66,6 +92,7 @@ def get_data():
     }
     
     return data
+
 
 
 if __name__ == "__main__":
