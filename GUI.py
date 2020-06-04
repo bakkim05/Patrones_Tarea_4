@@ -38,7 +38,7 @@ class main:
             x1 = x + self.c.winfo_width()
             y1 = y + self.c.winfo_height()
 
-            PIL.ImageGrab.grab().crop((x,y,x1,y1)).save(file + '.png')
+            PIL.ImageGrab.grab().crop((x,y,x1,y1)).resize((28,28)).save(file + '.png')
             
             
            
