@@ -5,14 +5,14 @@ Train a SVM to categorize 28x28 pixel images into digits (MNIST dataset).
 """
 
 import numpy as np
-from sklearn.datasets import load_digits
-from sklearn.utils import shuffle
 from sklearn.datasets import fetch_openml
 from sklearn.utils import shuffle
 from sklearn.svm import SVC
 from sklearn import metrics
 from matplotlib.pyplot import show, imshow, cm
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import ConfusionMatrixDisplay
 
 
 def main():
@@ -40,6 +40,11 @@ def analyze(clf, data):
     print("Precision: %0.4f" % metrics.precision_score(data['test']['y'], predicted,average='weighted'))
     print("Recall: %0.4f" % metrics.recall_score(data['test']['y'], predicted,average='weighted'))
     print("F1: %0.4f" % metrics.f1_score(data['test']['y'], predicted,average='weighted'))
+    cm = confusion_matrix(data["test"]["y"], predicted)
+    cm_display = ConfusionMatrixDisplay(cm)
+    cm_display.plot()
+    show()
+    
 
 
 
