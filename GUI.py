@@ -1,8 +1,11 @@
 from tkinter import *
 from tkinter import ttk, colorchooser, filedialog
-import PIL
-from PIL import ImageGrab
-
+from PIL import Image
+#from PIL import ImageGrab
+import pyscreenshot as ImageGrab
+import numpy as np
+from joblib import load
+from keras.models import load_model
 
 class main:
     def __init__(self,master):
@@ -38,7 +41,7 @@ class main:
             x1 = x + self.c.winfo_width()
             y1 = y + self.c.winfo_height()
 
-            PIL.ImageGrab.grab().crop((x,y,x1,y1)).resize((28,28)).save(file + '.png')
+            ImageGrab.grab().crop((x,y,x1,y1)).resize((28,28)).save(file)
             
             
            
@@ -49,10 +52,25 @@ class main:
 
     def svm(self):
         print("Aqui va la funcion de Support Vector Machine")
+        ima = Image.open("iden.png")
+        im = ima.convert('1')
+        a=np.asarray(im,dtype=np.float32)
+        a=a / 255.0 * 2 - 1
+        a=a.reshape(1,784)
+        clf = load('rbf-001-28.joblib')
+        val = clf.predict(a)
+        print(val)
         self.master.mainloop()
 
     def krs(self):
         print("Aqui va la funcion de Keras")
+        ima = Image.open("iden.png")
+        im = ima.convert('1')
+        a=np.asarray(im,dtype=np.float32)
+        a=a.reshape(1,784)
+        clf = load_model('network.h5')
+        val = clf.predict(a)
+        print(np.argmax(val))
         self.master.mainloop()
     
 

@@ -11,6 +11,7 @@ from sklearn.svm import SVC
 from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from joblib import dump, load
+from matplotlib.pyplot import show
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import ConfusionMatrixDisplay
 from sklearn.metrics import roc_curve
@@ -24,15 +25,15 @@ def main():
     data = get_data()
 
     
-    clf = SVC(probability=False, kernel="rbf", C=1.8, gamma=0.0073)
-    #clf = SVC(probability=False, kernel="sigmoid", C=1.8, gamma=0.0073)
+    #clf = SVC(probability=False, kernel="rbf", C=1.8, gamma=0.001)
+    clf = SVC(probability=False, kernel="sigmoid", C=1.8, gamma=0.0073)
     #clf = SVC(probability=False, kernel="linear", C=1.8, gamma=0.0073)
 
     print("FITTING DATA...")
     
     examples = len(data["train"]["X"])
     clf.fit(data["train"]["X"][:examples], data["train"]["y"][:examples])
-    dump(clf, 'linear-073-28.joblib')
+    dump(clf, 'sigmoid-073-28.joblib')
     #clf = load('linear-073-28.joblib')
 
 
@@ -59,10 +60,10 @@ def analyze(clf, data):
     
 
     #ROC Curve
-##    fpr, tpr, _ = roc_curve(y_test, predicted, pos_label=clf.classes_[1])
-##    roc_display = RocCurveDisplay(fpr=fpr, tpr=tpr)
-##    roc_display.plot()
-##    show()
+ #   fpr, tpr, _ = roc_curve(y_test, predicted)
+ #   roc_display = RocCurveDisplay(fpr, tpr)
+ #   roc_display.plot()
+ #   show()
 
     #Precision Recall
 ##    prec, recall, _ = precision_recall_curve(y_test, predicted, pos_label = clf.classes_[1])

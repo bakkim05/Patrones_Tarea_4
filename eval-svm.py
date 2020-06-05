@@ -17,7 +17,7 @@ def main():
     print("GETTING DATA...")
     data = get_data()
 
-    for x in range(11):
+    for x in range(6):
       print("\nLOADING MODEL...")
       loadmodel = savedmodel(x)
       print(loadmodel)
